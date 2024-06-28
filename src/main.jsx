@@ -9,10 +9,14 @@ import Layout from './Layout.jsx'
 import Groups from './components/Groups/Groups.jsx'
 import Activities from './components/Activities/Activities.jsx'
 import Profile from './components/Profile/Profile.jsx'
+import AuthPage from './components/AuthPage/authpage.jsx'
+import { Provider } from 'react-redux';
+import store from '../Auth/store.js'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<Layout />}>
-      <Route path='' element={<Profile />} />
+       <Route path='' element={<AuthPage />} />
+      <Route path='profile' element={<Profile />} />
       <Route path='friends' element={<Friends />} />
       <Route path='activities' element={<Activities />} />
       <Route path='groups' element={<Groups />} />
@@ -23,8 +27,11 @@ const router = createBrowserRouter(
 )
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
   
-  <RouterProvider router={router} />
-  </React.StrictMode>,
+  
+  
+ 
+   <Provider store={store}>
+    <RouterProvider router={router} />
+ </Provider>,
 )
