@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setToken } from '../../../Auth/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,7 +12,13 @@ const AuthPage = () => {
   const [message, setMessage] = useState('');
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-
+  //const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (token) {
+      navigate('/profile');
+    }
+  }, [token, navigate]);
   const handleAuth = async (e) => {
     e.preventDefault();
     setError('');
@@ -19,7 +26,7 @@ const AuthPage = () => {
 
     const url = isLogin ? 'http://localhost:3000/users/login' : 'http://localhost:3000/users';
     const payload = isLogin ? { email, password } : { name, email, password };
-    console.log(payload)
+    //console.log(payload)
     try {
       const response = await fetch(url, {
         method: 'POST',
