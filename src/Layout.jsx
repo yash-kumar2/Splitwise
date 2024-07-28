@@ -9,7 +9,7 @@ function Layout() {
 
   return (
     <>
-      {!isAuthPage && <Header />}
+      {!isAuthPage && <Header classname="absolute top-0" />}
       <Outlet />
       {!isAuthPage && <Footer />}
     </>
