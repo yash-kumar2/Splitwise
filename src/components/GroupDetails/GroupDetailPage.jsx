@@ -5,6 +5,16 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Modal } from 'antd';
+// // import { FormControl } from '@mui/material';
+// // import Select from '@mui/material';
+// import { Select } from '@mui/material';
+import { FormControl } from '@mui/material';
+import {Select,MenuItem,TextField} from '@mui/material';
+import { FormGroup, FormControlLabel, Switch } from '@mui/material';
+import MemberTable from './MemberTable';
+// import Select from '@mui/material';
+// import MenuItem from '@mui/material';
+
 const GroupDetailPage = () => {
   const token = useSelector((state) => state.auth.token);
   const BASEURL='http://localhost:3000'
@@ -29,8 +39,30 @@ const GroupDetailPage = () => {
       console.error("Error fetching data:", error);
     }
   };
+  const [members,setMembers]=useState([])
+  const fetchMembersData = async () => {
+    
+    try {
+      const result = await axios
+        .get(`${BASEURL}/groups/${id}/members`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => response.data);
+        console.log("sdfsdfsdsdf")
+        console.log(result)
+      setMembers(result.members)
+      
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   useEffect(()=>{
       fetchData()
+      fetchMembersData()
   },[id])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -112,6 +144,32 @@ const GroupDetailPage = () => {
   Object.keys(groupExpensesByMonth).forEach((month) => {
     groupExpensesByMonth[month].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   });
+  const [age, setAge] = React.useState('');
+
+  const handleChange = (event) => {
+    console.log(event.target.value)
+    setAge(event.target.value);
+  };
+  const [inputValue, setInputValue] = useState('');
+  const [amountPaid, setAmountPaid] = useState(0);
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+    console.log(event.target.value)
+  };
+  const [defaultChecked, setDefaultChecked] = useState(true);
+  const handleDefaultCheckedChange = (event) => {
+    setDefaultChecked(event.target.checked);
+  };
+  
+
+  const [memberAmounts, setMemberAmounts] = useState({});
+  const handleAmountChange = (email, amount) => {
+    setMemberAmounts((prevAmounts) => ({
+      ...prevAmounts,
+      [email]: amount,
+    }));
+  };
 
   return (
     
@@ -150,11 +208,55 @@ const GroupDetailPage = () => {
       <button className="fixed bottom-[100px] right-10 px-4 py-4 m-3  rounded-xl bg-blue-100" onClick={showModal} >
   Add Expense
 </button>
-<Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
+<Modal title="Add Expense" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
 centered >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+  <div className='flex justify-stretch items-center space-x-1'>
+     <p className='w-20'>paid by:</p>
+        <FormControl fullWidth>
+
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={age}
+    label="Age"
+    onChange={handleChange}
+  >
+    {
+      members.map((data)=>{ 
+        console.log(data)
+        
+        return (<MenuItem value={data.email}>{data.name}</MenuItem> )})
+    }
+    
+  </Select>
+</FormControl></div>
+<div className='flex justify-stretch items-center space-x-1 mt-1'>
+<p className='w-20'>Amount paid:</p>
+<TextField id="standard-basic" label="rupees" onChange={handleInputChange} variant="standard" />
+
+  
+</div>
+<div className='flex justify-center items-center space-x-1 mt-5'>
+<FormGroup>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={defaultChecked}
+            onChange={handleDefaultCheckedChange}
+
+          />
+        }
+        labelPlacement="start"
+        label="Split Evenly"
+      />
+    
+    </FormGroup>
+  
+</div>
+<MemberTable members={members} memberAmounts={memberAmounts} handleAmountChange={handleAmountChange} />
+
+
+
       </Modal>
 
     </div>
