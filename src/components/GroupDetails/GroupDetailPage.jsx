@@ -69,6 +69,7 @@ const GroupDetailPage = () => {
     setIsModalOpen(true);
   };
   const handleOk = () => {
+    addExpense();
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -168,7 +169,45 @@ const GroupDetailPage = () => {
     setMemberAmounts((prevAmounts) => ({
       ...prevAmounts,
       [email]: amount,
-    }));
+    }))
+    console.log(memberAmounts)
+    
+    
+    ;
+  };
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
+  };
+
+  const [description, setDescription] = useState('');
+
+  const addExpense = async () => {
+    let expensesArray =  defaultChecked ? Object.keys(memberAmounts).map(email => ({
+      email:email.email,
+      amount:  memberAmounts[email]
+    })) : members.map(email=>({
+      email,
+      amount: (amountPaid / members.length).toFixed(2)}
+    ))
+  
+
+    const data = {
+      description,
+      expenses: expensesArray
+    };
+
+    try {
+      await axios.post(`${BASEURL}/groups/${id}/addexpense`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setIsModalOpen(false);
+      fetchData(); // Refresh the data
+    } catch (error) {
+      console.error("Error adding expense:", error);
+    }
   };
 
   return (
@@ -211,6 +250,10 @@ const GroupDetailPage = () => {
 <Modal title="Add Expense" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
 centered >
   <div className='flex justify-stretch items-center space-x-1'>
+          <p className='w-20'>Description:</p>
+          <TextField id="description-basic" label="Description" onChange={handleDescriptionChange} variant="standard" />
+        </div>
+  <div className='flex justify-stretch items-center space-x-1 mt-5'>
      <p className='w-20'>paid by:</p>
         <FormControl fullWidth>
 
@@ -230,7 +273,7 @@ centered >
     
   </Select>
 </FormControl></div>
-<div className='flex justify-stretch items-center space-x-1 mt-1'>
+<div className='flex justify-stretch items-center space-x-1 mt-5'>
 <p className='w-20'>Amount paid:</p>
 <TextField id="standard-basic" label="rupees" onChange={handleInputChange} variant="standard" />
 

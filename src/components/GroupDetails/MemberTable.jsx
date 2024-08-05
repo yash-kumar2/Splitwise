@@ -3,22 +3,22 @@ import { TextField } from '@mui/material';
 
 const MemberTable = ({ members, memberAmounts, handleAmountChange }) => {
   return (
-    <div className="mt-5">
+    <div className="mt-5 p-4 border border-gray-300 rounded-lg shadow-md bg-white">
       <h3 className="text-lg font-semibold mb-2">Member Contributions</h3>
-      <table className="min-w-full bg-white">
+      <table className="min-w-full border border-gray-300 rounded-lg">
         <thead>
-          <tr>
-            <th className="py-2 px-4 border-b border-gray-200">Name</th>
-            <th className="py-2 px-4 border-b border-gray-200">Email</th>
-            <th className="py-2 px-4 border-b border-gray-200">Amount</th>
+          <tr className="bg-gray-100">
+            <th className="py-2 px-4 border-b border-gray-300">Name</th>
+            <th className="py-2 px-4 border-b border-gray-300">Email</th>
+            <th className="py-2 px-4 border-b border-gray-300">Amount</th>
           </tr>
         </thead>
         <tbody>
           {members.map((member, index) => (
-            <tr key={member.email}>
-              <td className="py-2 px-4 border-b border-gray-200">{member.name}</td>
-              <td className="py-2 px-4 border-b border-gray-200 text-sm">{member.email}</td>
-              <td className="py-2 px-4 border-b border-gray-200">
+            <tr key={member.email} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+              <td className="py-2 px-4 border-b border-gray-300">{member.name}</td>
+              <td className="py-2 px-4 border-b border-gray-300 text-sm">{member.email}</td>
+              <td className="py-2 px-4 border-b border-gray-300">
                 <TextField
                   type="number"
                   value={memberAmounts[member.email] || 0}
