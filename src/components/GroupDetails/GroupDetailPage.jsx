@@ -32,8 +32,10 @@ const GroupDetailPage = () => {
         })
         .then((response) => response.data);
         console.log(result)
+    
       setExpenses(result.expenses)
       setGroup(result)
+      console.log("??????????>>>>>>>>>>>>>?????????????")
       console.log(result.friends)
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -145,17 +147,19 @@ const GroupDetailPage = () => {
   Object.keys(groupExpensesByMonth).forEach((month) => {
     groupExpensesByMonth[month].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   });
-  const [age, setAge] = React.useState('');
+  const [payerEmail, setPayerEmail] = React.useState('');
 
   const handleChange = (event) => {
+    console.log(";;:::::::")
     console.log(event.target.value)
-    setAge(event.target.value);
+    setPayerEmail(event.target.value);
   };
   const [inputValue, setInputValue] = useState('');
   const [amountPaid, setAmountPaid] = useState(0);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
+    setAmountPaid(event.target.value)
     console.log(event.target.value)
   };
   const [defaultChecked, setDefaultChecked] = useState(true);
@@ -182,20 +186,37 @@ const GroupDetailPage = () => {
   const [description, setDescription] = useState('');
 
   const addExpense = async () => {
-    let expensesArray =  defaultChecked ? Object.keys(memberAmounts).map(email => ({
-      email:email.email,
-      amount:  memberAmounts[email]
-    })) : members.map(email=>({
-      email,
-      amount: (amountPaid / members.length).toFixed(2)}
-    ))
+    console.log(memberAmounts);
+    console.log(amountPaid);
+    console.log(members)
+    console.log("<<>>")
+    let expensesArray = !defaultChecked 
+    ? Object.keys(memberAmounts).map(email => ({
+        email: email, // Use the key directly
+        amount: memberAmounts[email] // Access the amount with the key
+    })) 
+    : members.map(member => ({
+        email: member.email, // Access email from member object
+        amount: (amountPaid / members.length).toFixed(2)
+    }));
+    let newarr=Object.keys(memberAmounts).map(email => ({
+      email: email, // Use the key directly
+      amount: memberAmounts[email] // Access the amount with the key
+  })) 
+  console.log("chekre")
+  console.log(defaultChecked)
+  console.log(memberAmounts)
+  
+
   
 
     const data = {
+      payerEmail,
       description,
       expenses: expensesArray
     };
-
+    console.log("Klll<<>>")
+     console.log(data)
     try {
       await axios.post(`${BASEURL}/groups/${id}/addexpense`, data, {
         headers: {
@@ -260,7 +281,7 @@ centered >
   <Select
     labelId="demo-simple-select-label"
     id="demo-simple-select"
-    value={age}
+    value={payerEmail}
     label="Age"
     onChange={handleChange}
   >
@@ -296,7 +317,8 @@ centered >
     </FormGroup>
   
 </div>
-<MemberTable members={members} memberAmounts={memberAmounts} handleAmountChange={handleAmountChange} />
+
+{!defaultChecked&&<MemberTable members={members} memberAmounts={memberAmounts} handleAmountChange={handleAmountChange} />}
 
 
 
