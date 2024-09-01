@@ -1,6 +1,8 @@
 import React from 'react';
 
 const ExpenseCard = ({ expense }) => {
+  console.log(expense)
+  console.log("cnsnfsdfksdjf")
   const date = new Date(expense.createdAt);
   const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: '2-digit' });
   const month = date.toLocaleDateString('en-US', { month: 'long' });
