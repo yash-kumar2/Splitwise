@@ -18,7 +18,7 @@ const GroupsCard = ({ group }) => {
       {group.friends.length > 0 ? (
         group.friends.slice(0, 3).map((friend, index) => {
           const friendAmountClass = friend.amount > 0 ? 'text-green-500' : 'text-red-500';
-          const friendAmountText = friend.amount > 0 ? `Owes you $${friend.amount}` : `You owe $${Math.abs(friend.amount)}`;
+          const friendAmountText = friend.amount > 0 ? `Owes you ₹${friend.amount}` : `You owe ₹${Math.abs(friend.amount)}`;
 
           return (
             <p key={index} className={`${friendAmountClass} mb-1`}>
