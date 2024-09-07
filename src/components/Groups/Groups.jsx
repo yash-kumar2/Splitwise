@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // Import useSelector from react-redux
+import { Link ,useNavigate} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import GroupsCard from './GroupsCard';
+import { Modal, Button, Input } from 'antd'; // Import Modal and Input from antd
+import axios from 'axios';
 
 const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
-  const token = useSelector((state) => state.auth.token); // Retrieve token from Redux store
+  const [isModalVisible, setIsModalVisible] = useState(false); // State to control modal visibility
+  const [newGroupName, setNewGroupName] = useState(''); // State to store new group name
+  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
+  const [d,sD]=useState(0)
 
   useEffect(() => {
     const fetchGroups = async () => {
       try {
         const response = await fetch('http://localhost:3000/groups', {
           headers: {
-            Authorization: `Bearer ${token}` // Set Authorization header with Bearer token
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) {
@@ -24,18 +30,78 @@ const GroupsPage = () => {
         setGroups(data);
       } catch (error) {
         console.error('Error fetching groups:', error);
-        // Handle error as needed
       }
     };
 
-    if (token) { // Ensure token is available before fetching groups
+    if (token) {
       fetchGroups();
     }
-  }, [token]); // Dependency on token ensures useEffect runs when token changes
+  }, [token,d]);
+
+  // Show the modal
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  // Handle modal "OK" button click to create a new group
+  const handleOk = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3000/groups',
+        { name: newGroupName }, // Payload containing the group name
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      
+      const createdGroup = response.data;
+      //navigate('/groups'); 
+      sD((d)=>d+1)
+      //setGroups([...groups, createdGroup]); // Add the new group to the list
+      //window.location.reload();
+      
+
+      setIsModalVisible(false); // Close the modal
+      setNewGroupName(''); // Clear the input field
+    } catch (error) {
+      console.error('Error creating group:', error);
+    }
+  };
+
+  // Handle modal "Cancel" button click
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Groups</h1>
+
+      {/* Button to open the modal */}
+      <Button type="primary" onClick={showModal} className="mb-4">
+        Create New Group
+      </Button>
+
+      {/* Modal for creating a new group */}
+      <Modal
+        title="Create New Group"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Create"
+        cancelText="Cancel"
+      >
+        <Input
+          placeholder="Enter group name"
+          value={newGroupName}
+          onChange={(e) => setNewGroupName(e.target.value)}
+        />
+      </Modal>
+
+      {/* List of groups */}
       {groups.map((group) => (
         <Link key={group.id} to={`/groups/${group.id}`}>
           <GroupsCard group={group} />

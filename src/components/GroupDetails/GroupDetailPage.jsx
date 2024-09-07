@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Modal } from 'antd';
+import AddMembers from './AddMembers'; 
 // // import { FormControl } from '@mui/material';
 // // import Select from '@mui/material';
 // import { Select } from '@mui/material';
@@ -231,6 +232,21 @@ const GroupDetailPage = () => {
     }
   };
 
+
+  const addMembersToGroup = async (emails) => {
+    try {
+      const result = await axios.post(`${BASEURL}/groups/${id}/members`, { emails }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      fetchMembersData(); // Refresh the members list
+    } catch (error) {
+      console.error('Error adding members:', error);
+    }
+  };
+
   return (
     
     <div className="container mx-auto  p-4 overflow-auto">
@@ -254,6 +270,7 @@ const GroupDetailPage = () => {
           </ul>
         </div>
       )}
+      <AddMembers friends={group.friends || []} addMembers={addMembersToGroup} />
       <h2 className="text-xl font-semibold mb-2">Expenses</h2>
       <div>
         {sortedMonths.map((month) => (
