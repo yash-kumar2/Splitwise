@@ -16,7 +16,7 @@ const GroupsPage = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const response = await fetch('http://localhost:3000/groups', {
+        const response = await fetch('https://bakcend-8jjm.onrender.com/groups', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -47,7 +47,7 @@ const GroupsPage = () => {
   const handleOk = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/groups',
+        'https://bakcend-8jjm.onrender.com/groups',
         { name: newGroupName }, // Payload containing the group name
         {
           headers: {

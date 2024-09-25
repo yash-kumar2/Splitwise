@@ -24,7 +24,7 @@ const AuthPage = () => {
     setError('');
     setMessage('');
 
-    const url = isLogin ? 'http://localhost:3000/users/login' : 'http://localhost:3000/users';
+    const url = isLogin ? 'https://bakcend-8jjm.onrender.com/users/login' : 'https://bakcend-8jjm.onrender.com/users';
     const payload = isLogin ? { email, password } : { name, email, password };
     //console.log(payload)
     try {

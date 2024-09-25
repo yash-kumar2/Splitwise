@@ -18,7 +18,7 @@ import MemberTable from './MemberTable';
 
 const GroupDetailPage = () => {
   const token = useSelector((state) => state.auth.token);
-  const BASEURL='http://localhost:3000'
+  const BASEURL='https://bakcend-8jjm.onrender.com'
   let { id } = useParams();
   console.log(id)
   const fetchData = async () => {

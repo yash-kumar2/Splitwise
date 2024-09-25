@@ -10,7 +10,7 @@ const FriendsPage = () => {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/friends', {
+        const response = await axios.get('https://bakcend-8jjm.onrender.com/friends', {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`, // Include token in the request

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 const Activities = () => {
   const [activities, setActivities] = useState([]);
   const token = useSelector((state) => state.auth.token);
-  const BASEURL = 'http://localhost:3000';
+  const BASEURL = 'https://bakcend-8jjm.onrender.com';
 
   useEffect(() => {
     fetchActivities();
