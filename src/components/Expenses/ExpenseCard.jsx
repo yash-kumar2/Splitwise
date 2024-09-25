@@ -18,7 +18,7 @@ const ExpenseCard = ({ expense }) => {
       <div className="flex-1 bg-white p-4 shadow rounded">
         <h3 className="text-lg font-bold mb-2">{expense.description}</h3>
         <p className="text-sm">
-          {expense.amount > 0 
+          {expense.amount < 0 
             ? `You paid ${expense.for.name} ₹${expense.amount}` 
             : `${expense.for.name} paid you ₹${-expense.amount}`
           }

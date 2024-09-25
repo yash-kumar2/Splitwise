@@ -311,12 +311,12 @@ centered >
     
   </Select>
 </FormControl></div>
-<div className='flex justify-stretch items-center space-x-1 mt-5'>
+{defaultChecked&&<div className='flex justify-stretch items-center space-x-1 mt-5'>
 <p className='w-20'>Amount paid:</p>
 <TextField id="standard-basic" label="rupees" onChange={handleInputChange} variant="standard" />
 
   
-</div>
+</div>}
 <div className='flex justify-center items-center space-x-1 mt-5'>
 <FormGroup>
       <FormControlLabel
